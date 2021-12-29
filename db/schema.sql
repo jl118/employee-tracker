@@ -4,7 +4,7 @@ create database cms_db;
 
 use cms_db;
 
-create table department (
+create table departments (
     id int not null auto_increment,
     name varchar(30) not null,
     primary key (id)
@@ -16,7 +16,7 @@ create table roles (
     salary decimal not null,
     dept_id int,
     foreign key (dept_id),
-    references department (id),
+    references departments (id),
     primary key (id)
     on delete set null
 );
