@@ -5,29 +5,31 @@ create database cms_db;
 use cms_db;
 
 create table department (
-    id int not null auto_increment primary key,
-    name varchar(30) not null
+    id int not null auto_increment,
+    name varchar(30) not null,
+    primary key (id)
 );
 
 create table roles (
-    id int not null primary key,
+    id int not null,
     title varchar(30) not null,
     salary decimal not null,
     dept_id int,
-    foreign key (dept_id)
-    references department (id)
+    foreign key (dept_id),
+    references department (id),
+    primary key (id)
     on delete set null
 );
 
-create table employee (
+create table employees (
     id int not null auto_increment,
     first_name varchar(30) not null,
     last_name varchar(30) not null,
     role_id int,
     manager_id int,
-    foreign key (role_id)
-    references roles (id)
-    foreign key (manager_id)
-    references employee (id)
+    foreign key (role_id),
+    references roles (id),
+    foreign key (manager_id),
+    references employees (id),
     on delete set null
 )
