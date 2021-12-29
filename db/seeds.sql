@@ -6,8 +6,8 @@ values  ('Human Resources'),
         ('Development');
 
 insert into roles (id, title, salary, dept_id)
-values  (124, 'HR Manager', 90000.00, 1),
-        (122, 'Recruiter', 75000.00, 1),
+values  (122, 'Recruiter', 75000.00, 1),
+        (124, 'HR Manager', 90000.00, 1),
         (221, 'General Counsel', 125000.00, 2),
         (314, 'Marketing Analyst', 65000.00, 3),
         (345, 'Director of Marketing', 155000.00, 3),
@@ -29,7 +29,7 @@ values  ('Papageno', 'Iacofo', 124, null),
         ('Hettie', 'Finlayson', 314, 2),
         ('Ulrich', 'Hightown', 403, 4),
         ('Giffy', 'Kleine', 403, 4),
-        ('Victoir', 'Davydoch', 521, 5)
+        ('Victoir', 'Davydoch', 521, 5),
         ('Ana', 'Blakden', 521, 5),
         ('Dianna', 'Hutchinges', 535, 5),
         ('Daryle', 'Yushmanov', 535, 5);
