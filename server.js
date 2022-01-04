@@ -7,28 +7,44 @@ const db = require("./config/connect");
 // title
 console.log("Welcome to the Employee Tracker");
 
-// TODO: view all departments function
+// lets the user wait choose to continue or exit after each action
+function cont() {
+    inquirer
+        .prompt([
+            {
+                type: "confirm", 
+                name :"continue", 
+                message: "Would you like to continue?"
+            }
+        ])
+        .then((response) => {if(response.continue){init()}else{process.exit(1)}});
+};
+
+// view all departments function
 function viewAllDepts() {
     db.query('select * from departments', function (err, results) {
         console.table(results);
+        cont();
     });
 };
 
-// TODO: view all roles function
+// view all roles function
 function viewAllRoles() {
     db.query('select roles.id, roles.title, roles.salary, departments.name FROM roles JOIN departments ON departments.id = roles.dept_id;', function (err, results) {
         console.table(results);
+        cont();
     });
 };
 
-// TODO: view all employees function
+// view all employees function
 function viewAllEmps() {
     db.query('select e.id, concat(e.first_name, " ", e.last_name) as "Name", roles.title, departments.name, roles.salary, concat(m.first_name, " ", m.last_name) as "Manager Name" from employees e left join employees m on e.manager_id = m.id join roles on e.role_id = roles.id join departments on departments.id = roles.dept_id order by e.id asc;', function (err, results) {
         console.table(results);
+        cont();
     });
 };
 
-// TODO: add department function
+// add department function
 function addDepartment() {
     inquirer
         .prompt(
@@ -47,11 +63,18 @@ function addDepartment() {
         .then((response) => {
             db.query(`insert into departments (name) value ("${response.dept}")`);
             console.log(`${response.dept} Department added to table.`);
+            cont();
         })
 };
 
-// TODO: add role function
+// add role function
 function addRole() {
+    // creates departments array
+    let depts = [];
+    db.query('select * from departments;' , function (err, results) {
+        results.forEach(element => {
+            depts.push({name: `${element.name}`, value: `${element.id}`},);
+        });
     inquirer
         .prompt(
             [{
@@ -96,16 +119,18 @@ function addRole() {
         )
         .then((response) => {
             db.query(`insert into roles ( id, title, salary, dept_id ) value ( ${response.id}, "${response.title}", ${response.salary}, ${response.dept_id})`);
-            console.log(`${response.title} role added to table.`)
+            console.log(`${response.title} role added to table.`);
+            cont();
         })
+    })
 };
 
-// TODO: add employee function
+// add employee function
 function addEmployee() {
     let role_name = [];
     // creates the array for the manager question
     let manager_names = [ {name: "none", value: null} ];
-    //gathers all roles
+    // gathers all roles
     db.query('select roles.id, roles.title from roles;' , function (err, results) {
         results.forEach(element => {
             role_name.push({name: `${element.title}`, value: `${element.id}`},);
@@ -146,12 +171,13 @@ function addEmployee() {
                 let name = response.first_name + " " + response.last_name;
                 db.query(`insert into employees (first_name, last_name, role_id, manager_id) value ("${response.first_name}", "${response.last_name}", ${response.role}, ${response.manager})`);
                 console.log(`Employee ${name} added to table.`);
+                cont();
             })
         })
     })
 };
 
-// TODO: update employee function
+// update employee function
 async function updateEmployee(){
     let employeeArray = [];
     let rolesArray = [];
@@ -183,13 +209,13 @@ async function updateEmployee(){
                 .then((response) => {
                     db.query(`update employees set role_id = ${response.role_id} where id = ${response.id}`);
                     console.log("Employee role updated.")
-                    
+                    cont();
                 })
         })
     })
 }
 
-// TODO: add inquirer prompts to perform different actions
+// inquirer prompts to perform different actions
 function init() {
     inquirer
         .prompt(
@@ -228,13 +254,14 @@ function init() {
 
                 case "Add an Employee": addEmployee();
                     break;
-
+                    
                 case "Update an Employee's Role": updateEmployee();
                     break;
-                    
+
                 case "Exit": process.exit(1);
             }
         })
 };
 
-// TODO: initialize the application
+// initialize the application
+init();
