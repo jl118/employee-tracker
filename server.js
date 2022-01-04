@@ -4,6 +4,7 @@ const cTable = require("console.table");
 
 const db = require("./config/connect");
 
+// TODO: add title
 
 // TODO: view all departments function
 function viewAllDepts() {
@@ -150,9 +151,42 @@ function addEmployee() {
 };
 
 // TODO: update employee function
-function updateEmployee() {
-
-};
+async function updateEmployee(){
+    let employeeArray = [];
+    let rolesArray = [];
+    //gathers all employees curently in the database
+    db.query('select concat(employees.first_name, " ", employees.last_name) as "name", employees.id from employees;', function (err,results) {
+        results.forEach(element => {
+                employeeArray.push({name: `${element.name}`, value: `${element.id}`},);
+        })
+        //gathers all roles curently in the database
+        db.query('select roles.id, roles.title from roles;', function (err,results) {
+            results.forEach(element => {
+                    rolesArray.push({name: `${element.title}`, value: `${element.id}`},);
+            })
+            inquirer
+                .prompt(
+                    [{
+                        type: "list",
+                        message: "Which employee would you like to update?",
+                        name: "id",
+                        choices: employeeArray
+                    },
+                    {
+                        type: "list",
+                        message: "What is the employee's new role?",
+                        name: "role_id",
+                        choices: rolesArray
+                    }]
+                )
+                .then((response) => {
+                    db.query(`update employees set roles_id = ${response.role_id} where id = ${response.id}`);
+                    console.log("Employee role updated.")
+                    
+                })
+        })
+    })
+}
 
 // TODO: add inquirer prompts to perform different actions
 function init() {
