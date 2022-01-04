@@ -31,9 +31,21 @@ function addDepartment() {
     inquirer
         .prompt(
             [{
-                
+                type: "input",
+                name: "dept",
+                message: "What is the name of the Department?",
+                validate: async (input) => {
+                    if(!input){
+                        return "Please enter a name for the department you wish to add.";
+                    }
+                    return true;
+                }
             }]
         )
+        .then((response) => {
+            db.query(`insert into departments (name) value ("${response.dept}")`);
+            console.log(`${response.dept} Department added to table.`);
+        })
 };
 
 // TODO: add role function
@@ -41,9 +53,49 @@ function addRole() {
     inquirer
         .prompt(
             [{
-                
+                type: "input",
+                name: "title",
+                message: "What is the name of the Role you would like to add.",
+                validate: async (input) => {
+                    if(!input){
+                        return "Please enter a name for the role you would like to add.";
+                    }
+                    return true;
+                }
+            },
+            {
+                type: "input",
+                name: "id",
+                message: "What is the id for the Role?",
+                validate: async (input) => {
+                    if(!input){
+                        return "Please enter an id.";
+                    }
+                    return true;
+                }
+            },
+            {
+                type: "input",
+                name: "salary",
+                message: "What is the salary for the role?",
+                validate: async (input) => {
+                    if(!input) {
+                        return "Please enter a salary for the new role.";
+                    }
+                    return true;
+                }
+            },
+            {
+                type: "list",
+                name: "dept_id",
+                message: "Which id corresponds to the department this role is in?",
+                choices: depts
             }]
         )
+        .then((response) => {
+            db.query(`insert into roles ( id, title, salary, dept_id ) value ( ${response.id}, "${response.title}", ${response.salary}, ${response.dept_id})`);
+            console.log(`${response.title} role added to table.`)
+        })
 };
 
 // TODO: add employee function
