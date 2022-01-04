@@ -100,12 +100,53 @@ function addRole() {
 
 // TODO: add employee function
 function addEmployee() {
-    inquirer
-        .prompt(
-            [{
-                
-            }]
-        )
+    let role_name = [];
+    // creates the array for the manager question
+    let manager_names = [ {name: "none", value: null} ];
+    //gathers all roles
+    db.query('select roles.id, roles.title from roles;' , function (err, results) {
+        results.forEach(element => {
+            role_name.push({name: `${element.title}`, value: `${element.id}`},);
+        });
+        // gathers all managers that are in the database
+        db.query('select concat(employees.first_name, " ", employees.last_name) as "name", employees.id, employees.manager_id from employees;', function (err,results) {
+            results.forEach(element => {
+                if (!element.manager_id){
+                    manager_names.push({name: `${element.name}`, value: `${element.id}`},);
+                }
+            })
+            inquirer
+                .prompt(
+                    [{
+                        type: "input",
+                        name: "first_name",
+                        message: "What is the employee's first name?"
+                    },
+                    {
+                        type: "input",
+                        name: "last_name",
+                        message: "What is the employee's last name?"
+                    },
+                    {
+                        type: "list",
+                        name: "role",
+                        message: "What role does this employee have?",
+                        choices: role_name
+                    },
+                    {   
+                        type: "list",
+                        name: "manager",
+                        message: "Who is the manager for this employee?",
+                        choices: manager_names
+                    }]
+                )
+            .then ((response) => {
+                let name = response.first_name + " " + response.last_name;
+                db.query(`insert into employees (first_name, last_name, roles_id, manager_id) value ("${response.first_name}", "${response.last_name}", ${response.role}, ${response.manager})`);
+                console.log(`Employee ${name} added to table.`);
+            })
+        })
+    })
 };
 
 // TODO: update employee function
