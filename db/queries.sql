@@ -11,3 +11,10 @@ select
     from roles 
     join departments 
     on departments.id = roles.dept_id;
+
+select e.id, concat(e.first_name, " ", e.last_name) as "Name", roles.title, departments.name, roles.salary, concat(m.first_name, " ", m.last_name) as "Manager Name"
+from employees e
+left join employees m on e.manager_id = m.id
+join roles on e.roles_id = roles.id
+join departments on departments.id = roles.dept_id
+order by e.id asc;
