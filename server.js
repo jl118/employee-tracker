@@ -4,7 +4,8 @@ const cTable = require("console.table");
 
 const db = require("./config/connect");
 
-// TODO: add title
+// title
+console.log("Welcome to the Employee Tracker");
 
 // TODO: view all departments function
 function viewAllDepts() {
