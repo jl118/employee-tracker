@@ -12,6 +12,7 @@
   ## Table of Contents
   * [Installation](#installation)
   * [Usage](#usage)
+  * [Preview](#preview)
   * [License](#license)
   * [Questions](#questions)
   
@@ -24,6 +25,10 @@
   ## Usage 
   
   Once the dependencies are installed, you will need to use MySQL in the terminal with the command `mysql -u root -p` and then enter your mysql password. Then you will have to run the schema.sql file using the command `source schema.sql`. After you set up the tables using the schema file, you can either use the provided seed data to populate the table, or create your own data. If you are using the provided seed data, you will need to run `source seeds.sql` and update the password in the `config/connect` file to your mysql password. Finally, you can return to your terminal and run `node server.js` to start the program and run through the options.
+
+  ## Preview
+
+  Link to a preview of the application [here](https://drive.google.com/file/d/1BtheJe57lwV57yP7tzJ_uYpxte52RZkl/view).
     
   ## License
  
