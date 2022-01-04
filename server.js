@@ -23,7 +23,7 @@ function viewAllRoles() {
 
 // TODO: view all employees function
 function viewAllEmps() {
-    db.query('select e.id, concat(e.first_name, " ", e.last_name) as "Name", roles.title, departments.name, roles.salary, concat(m.first_name, " ", m.last_name) as "Manager Name" from employees e left join employees m on e.manager_id = m.id join roles on e.roles_id = roles.id join departments on departments.id = roles.dept_id order by e.id asc;', function (err, results) {
+    db.query('select e.id, concat(e.first_name, " ", e.last_name) as "Name", roles.title, departments.name, roles.salary, concat(m.first_name, " ", m.last_name) as "Manager Name" from employees e left join employees m on e.manager_id = m.id join roles on e.role_id = roles.id join departments on departments.id = roles.dept_id order by e.id asc;', function (err, results) {
         console.table(results);
     });
 };
@@ -144,7 +144,7 @@ function addEmployee() {
                 )
             .then ((response) => {
                 let name = response.first_name + " " + response.last_name;
-                db.query(`insert into employees (first_name, last_name, roles_id, manager_id) value ("${response.first_name}", "${response.last_name}", ${response.role}, ${response.manager})`);
+                db.query(`insert into employees (first_name, last_name, role_id, manager_id) value ("${response.first_name}", "${response.last_name}", ${response.role}, ${response.manager})`);
                 console.log(`Employee ${name} added to table.`);
             })
         })
@@ -181,7 +181,7 @@ async function updateEmployee(){
                     }]
                 )
                 .then((response) => {
-                    db.query(`update employees set roles_id = ${response.role_id} where id = ${response.id}`);
+                    db.query(`update employees set role_id = ${response.role_id} where id = ${response.id}`);
                     console.log("Employee role updated.")
                     
                 })
@@ -213,18 +213,25 @@ function init() {
             switch (response.actions){
                 case "View all Departments": viewAllDepts();
                     break;
+
                 case "View all Roles": viewAllRoles();
                     break;
+
                 case "View all Employees": viewAllEmps();
                     break;
+
                 case "Add a Department": addDepartment();
                     break;
+
                 case "Add a Role": addRole();
                     break;
+
                 case "Add an Employee": addEmployee();
                     break;
+
                 case "Update an Employee's Role": updateEmployee();
                     break;
+                    
                 case "Exit": process.exit(1);
             }
         })
